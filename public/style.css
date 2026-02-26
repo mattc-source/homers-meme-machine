@@ -212,7 +212,7 @@ body {
   gap: 0;
 }
 .logo-the {
-  font-family: 'Boogaloo', cursive;
+  font-family: 'Permanent Marker', cursive;
   font-size: clamp(1.1rem, 2.8vw, 2rem);
   color: var(--yellow);
   text-shadow: 1px 2px 0 rgba(0,0,0,0.4);
@@ -221,7 +221,7 @@ body {
   margin-bottom: -0.1em;
 }
 .logo-simpsons {
-  font-family: 'Boogaloo', cursive;
+  font-family: 'Permanent Marker', cursive;
   font-size: clamp(2.8rem, 8vw, 6rem);
   color: var(--yellow);
   text-shadow: 2px 4px 0 rgba(0,0,0,0.4);
@@ -229,7 +229,7 @@ body {
   line-height: 1;
 }
 .logo-meme {
-  font-family: 'Boogaloo', cursive;
+  font-family: 'Permanent Marker', cursive;
   font-size: clamp(0.95rem, 2.5vw, 1.6rem);
   color: var(--white);
   text-shadow: 1px 2px 0 rgba(0,0,0,0.35);
