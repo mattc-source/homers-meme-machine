@@ -4,10 +4,12 @@
   --yellow-dk: #F2C400;
   --sky:       #6EC6E8;
   --sky-dk:    #4BAED4;
-  --orange:    #F97A1F;
-  --orange-dk: #D96000;
+  --orange:    #F5A623;
+  --orange-dk: #D4911A;
   --outline:   #1A1A1A;
-  --white:     #FFFEF0;
+  --white:     #FFFFFF;
+  --off-white: #FAFAFA;
+  --muted:     #5A7A8A;
 }
 
 /* ─── Reset ────────────────────────────────────────────── */
@@ -21,7 +23,7 @@ body {
     #B8DFF0 100%
   );
   background-attachment: fixed;
-  font-family: 'Permanent Marker', cursive;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
   color: var(--outline);
   overflow-x: hidden;
@@ -218,19 +220,20 @@ body {
   letter-spacing: 3px;
 }
 .logo-meme {
-  font-family: 'Bangers', cursive;
-  font-size: clamp(2rem, 6vw, 4.2rem);
+  font-family: 'Permanent Marker', cursive;
+  font-size: clamp(1.6rem, 5vw, 3.2rem);
   color: var(--white);
-  -webkit-text-stroke: 2px var(--outline);
-  text-shadow: 3px 3px 0 var(--outline);
-  letter-spacing: 2px;
+  -webkit-text-stroke: 1px var(--outline);
+  text-shadow: 2px 2px 0 var(--outline);
+  letter-spacing: 1px;
 }
 
 .tagline {
   margin-top: 0.8rem;
   font-size: clamp(0.85rem, 2.5vw, 1.1rem);
   color: var(--outline);
-  opacity: 0.7;
+  opacity: 0.75;
+  letter-spacing: 0.01em;
 }
 
 /* ─── Search ────────────────────────────────────────────── */
@@ -342,7 +345,7 @@ main {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
@@ -354,13 +357,13 @@ main {
 
 .meme-card {
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
   line-height: 0;
   opacity: 0;
   animation: card-in 0.55s ease forwards;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.18);
 }
 .meme-card:hover {
   transform: translateY(-6px) scale(1.02);
@@ -417,13 +420,13 @@ main {
 .lightbox-img {
   width: 100%;
   display: block;
-  border-radius: 8px 8px 0 0;
+  border-radius: 16px 16px 0 0;
 }
 .lightbox-bar {
   background: var(--yellow);
   border: 3px solid var(--outline);
   border-top: none;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 16px 16px;
   padding: 0.6rem 0.9rem;
   display: flex;
   align-items: center;
