@@ -211,30 +211,29 @@ body {
   line-height: 1;
   gap: 0;
 }
-.logo-homer {
-  font-family: 'Bangers', cursive;
-  font-size: clamp(2.4rem, 7vw, 5.5rem);
+.logo-the {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.4rem, 3.5vw, 2.6rem);
   color: var(--yellow);
-  -webkit-text-stroke: 3px var(--outline);
-  text-shadow:
-    1px 1px 0 var(--outline),
-    2px 2px 0 var(--outline),
-    3px 3px 0 var(--outline),
-    4px 4px 0 var(--outline),
-    5px 5px 0 var(--outline),
-    6px 6px 0 var(--outline);
-  letter-spacing: 4px;
+  text-shadow: 2px 3px 0 rgba(0,0,0,0.45);
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.logo-simpsons {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  color: var(--yellow);
+  text-shadow: 3px 4px 0 rgba(0,0,0,0.45);
+  letter-spacing: 3px;
+  line-height: 1;
 }
 .logo-meme {
-  font-family: 'Permanent Marker', cursive;
-  font-size: clamp(1rem, 3vw, 1.8rem);
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1rem, 2.8vw, 1.8rem);
   color: var(--white);
-  text-shadow:
-    -1px -1px 0 var(--outline),
-     1px -1px 0 var(--outline),
-    -1px  1px 0 var(--outline),
-     1px  1px 0 var(--outline);
-  letter-spacing: 1px;
+  text-shadow: 1px 2px 0 rgba(0,0,0,0.4);
+  letter-spacing: 2px;
+  margin-top: 0.2rem;
 }
 
 .tagline {
