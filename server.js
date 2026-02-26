@@ -13,27 +13,26 @@ async function frinkiacFetch(url) {
   return res.json();
 }
 
-// ── Interpret scenario with Claude → search queries ────────
+// ── Interpret scenario with Groq → search queries ──────────
 app.get('/api/interpret', async (req, res) => {
   const { q } = req.query;
   if (!q) return res.status(400).json({ error: 'Query required' });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     // No key configured — pass query through as-is
     return res.json({ queries: [q] });
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'llama-3.1-8b-instant',
         max_tokens: 256,
         messages: [{
           role: 'user',
@@ -56,9 +55,9 @@ Example: ["homer forbidden donut", "mmm donuts", "is there anything", "17 donuts
     });
 
     const data = await response.json();
-    const text = data.content?.[0]?.text || '';
+    const text = data.choices?.[0]?.message?.content || '';
     const match = text.match(/\[[\s\S]*?\]/);
-    if (!match) throw new Error('No JSON array in Claude response');
+    if (!match) throw new Error('No JSON array in Groq response');
 
     const queries = JSON.parse(match[0]);
     if (!Array.isArray(queries) || queries.length === 0) throw new Error('Empty queries');
