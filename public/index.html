@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homer's Meme Machine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient background clouds -->
+  <div class="bg-sky" aria-hidden="true">
+    <div class="sky-cloud sc-1"></div>
+    <div class="sky-cloud sc-2"></div>
+    <div class="sky-cloud sc-3"></div>
+    <div class="sky-cloud sc-4"></div>
+  </div>
+
+  <!-- Opening cloud mosaic — 9 clouds scatter outward on load -->
+  <div class="curtain-clouds" aria-hidden="true">
+    <div class="cc cc-1"></div>
+    <div class="cc cc-2"></div>
+    <div class="cc cc-3"></div>
+    <div class="cc cc-4"></div>
+    <div class="cc cc-5"></div>
+    <div class="cc cc-6"></div>
+    <div class="cc cc-7"></div>
+    <div class="cc cc-8"></div>
+    <div class="cc cc-9"></div>
+  </div>
+
+  <!-- Hero: revealed as curtains part -->
+  <div class="hero">
+    <div class="logo">
+      <span class="logo-homer">Homer's</span>
+      <span class="logo-meme">Meme Machine</span>
+    </div>
+    <p class="tagline">Type any scenario. Get the perfect Simpsons moment.</p>
+
+    <section class="search-section">
+      <form id="searchForm" autocomplete="off">
+        <div class="input-wrap">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="e.g. A celebrity now runs the country..."
+            maxlength="120"
+          >
+          <button type="submit" id="searchBtn">D'OH!</button>
+        </div>
+        <div class="example-chips">
+          <span class="chip-label">Try:</span>
+          <button type="button" class="chip" data-q="I got stuck in the rain">stuck in the rain</button>
+          <button type="button" class="chip" data-q="nobody believes me">nobody believes me</button>
+          <button type="button" class="chip" data-q="the food was terrible">terrible food</button>
+          <button type="button" class="chip" data-q="I need more money">need more money</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <main>
+    <section id="loading" class="loading hidden">
+      <div class="donut" aria-hidden="true">🍩</div>
+      <p id="loadingMsg">Searching Springfield…</p>
+    </section>
+
+    <section id="results" class="results hidden">
+      <div class="results-header"><span id="resultsCount"></span></div>
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <section id="noResults" class="no-results hidden">
+      <div class="doh-wrap"><span class="doh">D'oh!</span></div>
+      <p>No Simpsons moment found for that.<br>Try different words.</p>
+    </section>
+
+    <section id="error" class="error hidden">
+      <p>⚠️ Something went wrong. Frinkiac might be napping.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Images & quotes via <a href="https://frinkiac.com" target="_blank" rel="noopener">Frinkiac</a> · For fan use only</p>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" aria-label="Close">✕</button>
+      <img class="lightbox-img" src="" alt="Simpsons meme">
+      <div class="lightbox-bar">
+        <div class="lightbox-meta">
+          <span class="lb-episode"></span>
+          <span class="lb-title"></span>
+        </div>
+        <button class="lb-copy">DOWNLOAD</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden">Link copied!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
