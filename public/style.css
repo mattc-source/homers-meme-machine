@@ -213,7 +213,7 @@ body {
 }
 .logo-homer {
   font-family: 'Bangers', cursive;
-  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-size: clamp(2.4rem, 7vw, 5.5rem);
   color: var(--yellow);
   -webkit-text-stroke: 3px var(--outline);
   text-shadow:
@@ -221,18 +221,19 @@ body {
     2px 2px 0 var(--outline),
     3px 3px 0 var(--outline),
     4px 4px 0 var(--outline),
-    5px 5px 0 var(--outline);
-  letter-spacing: 3px;
+    5px 5px 0 var(--outline),
+    6px 6px 0 var(--outline);
+  letter-spacing: 4px;
 }
 .logo-meme {
   font-family: 'Permanent Marker', cursive;
-  font-size: clamp(1.6rem, 5vw, 3.2rem);
+  font-size: clamp(1rem, 3vw, 1.8rem);
   color: var(--white);
   text-shadow:
-    -2px -2px 0 var(--outline),
-     2px -2px 0 var(--outline),
-    -2px  2px 0 var(--outline),
-     2px  2px 0 var(--outline);
+    -1px -1px 0 var(--outline),
+     1px -1px 0 var(--outline),
+    -1px  1px 0 var(--outline),
+     1px  1px 0 var(--outline);
   letter-spacing: 1px;
 }
 
