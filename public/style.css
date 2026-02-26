@@ -216,15 +216,23 @@ body {
   font-size: clamp(2.8rem, 8vw, 6rem);
   color: var(--yellow);
   -webkit-text-stroke: 3px var(--outline);
-  text-shadow: 4px 4px 0 var(--outline);
+  text-shadow:
+    1px 1px 0 var(--outline),
+    2px 2px 0 var(--outline),
+    3px 3px 0 var(--outline),
+    4px 4px 0 var(--outline),
+    5px 5px 0 var(--outline);
   letter-spacing: 3px;
 }
 .logo-meme {
   font-family: 'Permanent Marker', cursive;
   font-size: clamp(1.6rem, 5vw, 3.2rem);
   color: var(--white);
-  -webkit-text-stroke: 1px var(--outline);
-  text-shadow: 2px 2px 0 var(--outline);
+  text-shadow:
+    -2px -2px 0 var(--outline),
+     2px -2px 0 var(--outline),
+    -2px  2px 0 var(--outline),
+     2px  2px 0 var(--outline);
   letter-spacing: 1px;
 }
 
