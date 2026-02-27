@@ -174,8 +174,9 @@ function openLightbox({ url, episode, title }) {
       const blob = await res.blob();
       const file = new File([blob], 'simpsons-meme.jpg', { type: 'image/jpeg' });
 
-      // Mobile: use native share sheet (includes "Save to Photos" on iOS)
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      // Mobile only: use native share sheet (includes "Save to Photos" on iOS)
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({ files: [file] });
       } else {
         // Desktop: trigger automatic download to Downloads folder
