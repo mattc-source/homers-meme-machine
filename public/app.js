@@ -108,34 +108,52 @@ async function runQuery(query) {
 }
 
 /**
- * Run all queries in parallel, then score each episode by how many
- * separate queries returned it (+ a rank bonus for appearing early).
- * Higher score = more semantically relevant result.
+ * Run all queries in parallel, score each frame by how many queries
+ * returned it (+ rank bonus). Aggregates by frame, not episode, so
+ * multiple moments from the same episode can appear. Filters out
+ * frames within 30s of a better-ranked frame from the same episode.
  */
 function aggregateResults(allResults, max) {
-  const scores = new Map(); // episode → score
-  const best   = new Map(); // episode → best matching frame
+  const scores   = new Map(); // "episode|timestamp" → score
+  const frameMap = new Map(); // "episode|timestamp" → frame object
 
   for (const results of allResults) {
     if (!Array.isArray(results)) continue;
     const seenThisQuery = new Set();
 
     results.forEach((frame, rank) => {
-      if (seenThisQuery.has(frame.Episode)) return;
-      seenThisQuery.add(frame.Episode);
+      const key = `${frame.Episode}|${frame.Timestamp}`;
+      if (seenThisQuery.has(key)) return;
+      seenThisQuery.add(key);
 
-      // +1 per query that matched, plus a small bonus for ranking higher
       const rankBonus = 1 - rank / results.length;
-      scores.set(frame.Episode, (scores.get(frame.Episode) || 0) + 1 + rankBonus);
-
-      if (!best.has(frame.Episode)) best.set(frame.Episode, frame);
+      scores.set(key, (scores.get(key) || 0) + 1 + rankBonus);
+      if (!frameMap.has(key)) frameMap.set(key, frame);
     });
   }
 
-  return [...scores.entries()]
+  // Sort all frames by score
+  const sorted = [...scores.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, max)
-    .map(([ep]) => best.get(ep));
+    .map(([key]) => frameMap.get(key));
+
+  // Keep frames that are at least 30s apart from any better-ranked frame in the same episode
+  const MIN_GAP_MS = 30000;
+  const keptTs = new Map(); // episode → [kept timestamps]
+  const kept = [];
+
+  for (const frame of sorted) {
+    const ts = keptTs.get(frame.Episode) || [];
+    const tooClose = ts.some(t => Math.abs(frame.Timestamp - t) < MIN_GAP_MS);
+    if (!tooClose) {
+      kept.push(frame);
+      ts.push(frame.Timestamp);
+      keptTs.set(frame.Episode, ts);
+    }
+    if (kept.length >= max) break;
+  }
+
+  return kept;
 }
 
 // ─── Lightbox ─────────────────────────────────────────────
@@ -233,7 +251,7 @@ async function doSearch(query) {
     const allResults = await Promise.all(queries.map(runQuery));
 
     // 3. Score and merge — best matches bubble to the top
-    const frames = aggregateResults(allResults, 8);
+    const frames = aggregateResults(allResults, 12);
 
     if (frames.length === 0) {
       hide(loadingEl);

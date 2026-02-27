@@ -41,16 +41,17 @@ app.get('/api/interpret', async (req, res) => {
 
 User scenario: "${q}"
 
-Generate 4 short search queries (2–5 words each) that will find the best matching Simpsons scenes in the subtitle database.
+Generate 6 short search queries (2–5 words each) that will find the best matching Simpsons scenes in the subtitle database. Spread the queries to cover different moments, characters, and angles related to the scenario — not just the most obvious one.
 
 Think about:
 - What exact words or dialogue would appear in the actual subtitles of the matching scene?
-- Do you recognise a specific famous scene? If so, use the character's real dialogue from that scene.
+- Do you recognise a specific famous scene or iconic meme moment? If so, use the character's real dialogue verbatim.
+- Try different characters who might react to this scenario.
 - Character names + specific phrases work better than descriptive terms.
 - Subtitles are written in plain spoken English.
 
 Return ONLY a JSON array of strings, nothing else.
-Example: ["homer forbidden donut", "mmm donuts", "is there anything", "17 donuts"]`
+Example: ["homer forbidden donut", "mmm donuts", "is there anything", "17 donuts", "donut glazed", "bart doughnut"]`
         }]
       })
     });
@@ -145,7 +146,7 @@ app.get('/api/search', async (req, res) => {
     const data = await frinkiacFetch(
       `https://frinkiac.com/api/search?q=${encodeURIComponent(q)}`
     );
-    res.json(Array.isArray(data) ? data.slice(0, 20) : []);
+    res.json(Array.isArray(data) ? data.slice(0, 30) : []);
   } catch (err) {
     console.error('Search error:', err.message);
     res.status(500).json({ error: 'Frinkiac unavailable' });
