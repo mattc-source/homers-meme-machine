@@ -178,12 +178,14 @@ function openLightbox({ url, episode, title }) {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({ files: [file] });
       } else {
-        // Desktop: trigger file download
+        // Desktop: trigger automatic download to Downloads folder
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'simpsons-meme.jpg';
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(a.href), 100);
       }
     } catch (err) {
       if (err.name !== 'AbortError') showToast('Download failed');
