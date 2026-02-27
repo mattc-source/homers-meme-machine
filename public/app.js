@@ -150,17 +150,26 @@ function openLightbox({ url, episode, title }) {
   lbImg.src              = url;
   lbEpisode.textContent  = episode;
   lbTitle.textContent    = title;
-  lbCopy.onclick = () => {
-    fetch(`/api/download?url=${encodeURIComponent(url)}`)
-      .then(r => r.blob())
-      .then(blob => {
+  lbCopy.onclick = async () => {
+    try {
+      const res  = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
+      const blob = await res.blob();
+      const file = new File([blob], 'simpsons-meme.jpg', { type: 'image/jpeg' });
+
+      // Mobile: use native share sheet (includes "Save to Photos" on iOS)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+      } else {
+        // Desktop: trigger file download
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'simpsons-meme.jpg';
         a.click();
         URL.revokeObjectURL(a.href);
-      })
-      .catch(() => showToast('Download failed'));
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') showToast('Download failed');
+    }
   };
   lightbox.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
