@@ -37,21 +37,23 @@ app.get('/api/interpret', async (req, res) => {
         max_tokens: 256,
         messages: [{
           role: 'user',
-          content: `You are a Simpsons expert helping search Frinkiac, a subtitle database for every Simpsons episode.
+          content: `You are a Simpsons meme expert helping search Frinkiac, a subtitle database for every Simpsons episode.
 
 User scenario: "${q}"
 
-Generate 6 short search queries (2–5 words each) that will find the best matching Simpsons scenes in the subtitle database. Spread the queries to cover different moments, characters, and angles related to the scenario — not just the most obvious one.
+Think creatively and laterally:
+1. What EMOTIONS does this evoke? (frustration, embarrassment, boredom, excitement, etc.)
+2. What RELATED SITUATIONS or concepts connect to this? e.g. "stuck in traffic" → driving, waiting, impatience, road rage, long journeys
+3. What ICONIC SIMPSONS MOMENTS or famous meme lines capture this feeling — even indirectly?
+4. What would a Simpsons fan quote in reaction to this scenario?
 
-Think about:
-- What exact words or dialogue would appear in the actual subtitles of the matching scene?
-- Do you recognise a specific famous scene or iconic meme moment? If so, use the character's real dialogue verbatim.
-- Try different characters who might react to this scenario.
-- Character names + specific phrases work better than descriptive terms.
-- Subtitles are written in plain spoken English.
+Generate 6 search queries (2–5 words each) for Frinkiac's subtitle database. Prioritise:
+- Famous, quotable one-liners and reactions over literal scene descriptions
+- Different characters and emotional angles (Homer's frustration, Bart's sarcasm, Lisa's exasperation)
+- Actual dialogue that would appear in subtitles — plain spoken English, no stage directions
 
 Return ONLY a JSON array of strings, nothing else.
-Example: ["homer forbidden donut", "mmm donuts", "is there anything", "17 donuts", "donut glazed", "bart doughnut"]`
+Example for "stuck in traffic": ["are we there yet", "homer this is taking forever", "I'm not angry I'm just disappointed", "worst day of my life", "why does everything happen to me", "boring long drive"]`
         }]
       })
     });
@@ -93,13 +95,19 @@ app.post('/api/bestquote', async (req, res) => {
         max_tokens: 512,
         messages: [{
           role: 'user',
-          content: `You are a Simpsons expert. The user's scenario is: "${scenario}"
+          content: `You are a Simpsons meme expert. The user's scenario is: "${scenario}"
 
-Here are subtitle excerpts from ${captions.length} Simpsons scenes. For each scene, extract the single funniest or most memorable quote that best fits the scenario. Choose the punchline, not setup dialogue. If the excerpt already contains a great punchline, use it verbatim. Keep each quote under 100 characters.
+Here are subtitle excerpts from ${captions.length} Simpsons scenes. For each scene pick the single best quote that:
+- Works as a standalone meme — funny or relatable without needing context
+- Is a punchy one-liner or short snappy exchange, not setup-heavy dialogue
+- Captures the FEELING of the scenario even if not literally about it
+- Would make someone laugh or nod and say "that's so true"
+
+Prefer the shortest, punchiest option. Avoid quotes that are just setup with no payoff.
 
 ${captions.map((c, i) => `Scene ${i + 1}: "${c}"`).join('\n')}
 
-Return ONLY a JSON array of ${captions.length} strings, one per scene. If a scene has no usable quote return an empty string for that entry.`
+Return ONLY a JSON array of ${captions.length} strings. Max 90 characters per quote. Return an empty string for any scene with no meme-able line.`
         }]
       })
     });
