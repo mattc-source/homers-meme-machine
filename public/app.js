@@ -181,8 +181,8 @@ document.addEventListener('keydown', e => {
 });
 
 // ─── Build a single meme card ─────────────────────────────
-function buildCard(frame, captionData) {
-  const subtitle    = pickSubtitle(captionData);
+function buildCard(frame, captionData, subtitle) {
+  if (!subtitle) subtitle = pickSubtitle(captionData);
   if (!subtitle) return null;
 
   // Skip if the quote wraps to more than 4 lines — text would overflow the image
@@ -215,7 +215,7 @@ async function doSearch(query) {
   show(loadingEl);
 
   try {
-    // 1. Ask Claude to translate scenario → targeted Frinkiac queries
+    // 1. Ask Groq to translate scenario → targeted Frinkiac queries
     setMsg('Consulting Professor Frink…');
     const queries = await interpretScenario(query);
 
@@ -241,13 +241,32 @@ async function doSearch(query) {
       )
     );
 
+    // 5. Ask Groq to pick the best punchline from each caption
+    setMsg('Picking the punchlines…');
+    const rawSubtitles = captionResults.map(r =>
+      r.status === 'fulfilled' ? pickSubtitle(r.value) : ''
+    );
+
+    let finalSubtitles = rawSubtitles;
+    try {
+      const qRes = await fetch('/api/bestquote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario: query, captions: rawSubtitles })
+      });
+      const { quotes } = await qRes.json();
+      if (Array.isArray(quotes) && quotes.length === rawSubtitles.length) {
+        finalSubtitles = quotes.map((q, i) => q || rawSubtitles[i]);
+      }
+    } catch (e) { /* fall back to rawSubtitles */ }
+
     hide(loadingEl);
 
-    // 5. Build cards
+    // 6. Build cards
     let built = 0;
     captionResults.forEach((result, i) => {
       if (result.status !== 'fulfilled') return;
-      const card = buildCard(frames[i], result.value);
+      const card = buildCard(frames[i], result.value, finalSubtitles[i]);
       if (card) {
         card.style.animationDelay = `${built * 0.09}s`;
         gridEl.appendChild(card);

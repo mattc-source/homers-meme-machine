@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 // ── Frinkiac proxy helper ──────────────────────────────────
 async function frinkiacFetch(url) {
@@ -66,6 +67,52 @@ Example: ["homer forbidden donut", "mmm donuts", "is there anything", "17 donuts
   } catch (err) {
     console.error('Interpret error:', err.message);
     res.json({ queries: [q] }); // graceful fallback to raw query
+  }
+});
+
+// ── Groq punchline picker ──────────────────────────────────
+app.post('/api/bestquote', async (req, res) => {
+  const { scenario, captions } = req.body;
+  if (!scenario || !Array.isArray(captions)) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return res.json({ quotes: captions });
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        max_tokens: 512,
+        messages: [{
+          role: 'user',
+          content: `You are a Simpsons expert. The user's scenario is: "${scenario}"
+
+Here are subtitle excerpts from ${captions.length} Simpsons scenes. For each scene, extract the single funniest or most memorable quote that best fits the scenario. Choose the punchline, not setup dialogue. If the excerpt already contains a great punchline, use it verbatim. Keep each quote under 100 characters.
+
+${captions.map((c, i) => `Scene ${i + 1}: "${c}"`).join('\n')}
+
+Return ONLY a JSON array of ${captions.length} strings, one per scene. If a scene has no usable quote return an empty string for that entry.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content || '';
+    const match = text.match(/\[[\s\S]*?\]/);
+    if (!match) throw new Error('No JSON array in response');
+
+    const quotes = JSON.parse(match[0]);
+    res.json({ quotes });
+  } catch (err) {
+    console.error('Bestquote error:', err.message);
+    res.json({ quotes: captions }); // fallback to original captions
   }
 });
 
